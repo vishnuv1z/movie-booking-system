@@ -5,6 +5,8 @@ import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import BookingsPage from './pages/BookingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ShowtimesPage from './pages/ShowtimesPage';
+import SeatSelectionPage from './pages/SeatSelectionPage';
 
 export default function App() {
   return (
@@ -14,6 +16,10 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        
+        {/* Booking Flow Routes */}
+        <Route path="/showtimes" element={<ShowtimesPage />} />
+        <Route path="/seat-selection" element={<SeatSelectionPage />} />
         
         {/* Protected Routes (would need auth middleware in real app) */}
         <Route path="/profile" element={<ProfilePage />} />

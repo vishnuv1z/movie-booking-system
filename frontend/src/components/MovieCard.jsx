@@ -1,5 +1,12 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function MovieCard({ movie }) {
+  const navigate = useNavigate();
   const { title, language, duration, genre, rating, poster, year } = movie;
+
+  const handleBookNow = () => {
+    navigate('/showtimes', { state: { movie } });
+  };
 
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48">
@@ -53,14 +60,17 @@ export default function MovieCard({ movie }) {
           <span className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full" />
           <span className="flex items-center gap-1 line-clamp-1">
             <svg className="w-3.5 h-3.5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00-.447.894l1.006 5.035a1 1 0 01.952.841h.734a1 1 0 01.951-.841l1.007-5.035A1 1 0 0111 10V6z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00-.447.894l1.006 5.035a1 1 0 01.952.841h.734a1 1 0 01.951-.841l1.007-5.035A1 1 0 0011 10V6z" clipRule="evenodd" />
             </svg>
             {duration}
           </span>
         </div>
 
         {/* Book Now button */}
-        <button className="mt-auto w-full py-2 bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg active:scale-95">
+        <button
+          onClick={handleBookNow}
+          className="mt-auto w-full py-2 bg-primary hover:bg-primary-dark text-white text-xs font-bold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg active:scale-95"
+        >
           Book Now
         </button>
 
