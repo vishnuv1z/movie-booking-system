@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import DarkModeToggle from './DarkModeToggle';
 
 export default function Navbar() {
@@ -13,12 +14,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">M</span>
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">CineBook</span>
-            </a>
+            </Link>
           </div>
 
           {/* Search Bar */}
@@ -75,9 +76,12 @@ export default function Navbar() {
             <DarkModeToggle />
 
             {/* Sign In Button */}
-            <button className="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors shadow-sm hover:shadow-md">
+            <Link
+              to="/login"
+              className="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors shadow-sm hover:shadow-md"
+            >
               Sign In
-            </button>
+            </Link>
           </div>
         </div>
       </div>

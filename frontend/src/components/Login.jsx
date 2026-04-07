@@ -1,0 +1,212 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+    setErrors(newErrors);
+    
+    if (Object.keys(newErrors).length === 0) {
+      // Form is valid - no backend call as per requirements
+      console.log('Form submitted:', { email, password });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-dark-surface transition-colors duration-300 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Subtle movie-themed background gradient */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl" />
+      </div>
+
+      {/* Login Card */}
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-2xl transition-all duration-300">
+          {/* Card Content */}
+          <div className="p-8 md:p-10">
+            {/* Logo Section */}
+            <div className="flex justify-center mb-8">
+              <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-xl">M</span>
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
+                  CineBook
+                </span>
+              </Link>
+            </div>
+
+            {/* Header Text */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Welcome Back
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                Sign in to continue booking your favorite movies
+              </p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email Input */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors({ ...errors, email: '' });
+                  }}
+                  placeholder="you@example.com"
+                  className={`w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border-2 transition-all focus:outline-none ${
+                    errors.email
+                      ? 'border-red-500 focus:border-red-600 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30'
+                      : 'border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/30'
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Password Input */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errors.password) setErrors({ ...errors, password: '' });
+                    }}
+                    placeholder="••••••••"
+                    className={`w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border-2 transition-all focus:outline-none pr-12 ${
+                      errors.password
+                        ? 'border-red-500 focus:border-red-600 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30'
+                        : 'border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/30'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                        <path d="M15.171 13.576l1.473 1.473a1 1 0 001.414-1.414l-.056-.056a10.012 10.012 0 001.208-4.522c-1.274-4.057-5.064-7-9.542-7a9.96 9.96 0 00-5.516 1.672l-.604-.604" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+                )}
+              </div>
+
+              {/* Forgot Password Link */}
+              <div className="flex justify-end">
+                <a
+                  href="#"
+                  className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
+                >
+                  Forgot Password?
+                </a>
+              </div>
+
+              {/* Sign In Button */}
+              <button
+                type="submit"
+                className="w-full py-3 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+              >
+                <span>Sign In</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
+              <span className="text-sm text-gray-500 dark:text-gray-400">or</span>
+              <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
+            </div>
+
+            {/* Social Login Options */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <button className="py-2.5 px-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-primary dark:hover:border-primary text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-primary/5 dark:hover:bg-primary/10">
+                <svg className="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M15.545 6.558a9.42 9.42 0 01.139 1.626c0 2.449-.901 4.711-2.399 6.416m3.507-6.425a10.823 10.823 0 00-.891-2.704C13.474 1.917 10.866.858 7.877.858c-1.295 0-2.848.248-4.088.936-.577.333-1.15.748-1.697 1.184a10.02 10.02 0 002.905 16.93c1.25.512 2.8.863 4.422.863 3.12 0 5.821-1.365 7.831-3.718m-10.251-8.385h.008v.008h-.008V6.558z" />
+                </svg>
+              </button>
+              <button className="py-2.5 px-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-primary dark:hover:border-primary text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-primary/5 dark:hover:bg-primary/10">
+                <svg className="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.5 1.5H3.75A2.25 2.25 0 001.5 3.75v12.5A2.25 2.25 0 003.75 18.5h12.5a2.25 2.25 0 002.25-2.25V9.5" stroke="currentColor" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+                  <path d="M15 1.5v6M12 4.5h6" stroke="currentColor" strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Sign Up Link */}
+            <div className="text-center">
+              <p className="text-gray-600 dark:text-gray-400">
+                Don't have an account?{' '}
+                <Link
+                  to="/signup"
+                  className="font-semibold text-primary hover:text-primary-dark transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Link */}
+        <p className="text-center mt-6 text-sm text-gray-600 dark:text-gray-400">
+          By signing in, you agree to our{' '}
+          <a href="#" className="text-primary hover:text-primary-dark font-medium transition-colors">
+            Terms of Service
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}

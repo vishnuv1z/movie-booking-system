@@ -22,3 +22,5 @@ frontend/dist/
 
 # backend specific
 backend/node_modules/
+
+LOGIN_SIGNUP_GUIDE.md
