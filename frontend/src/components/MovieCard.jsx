@@ -9,7 +9,7 @@ export default function MovieCard({ movie }) {
   };
 
   return (
-    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:scale-105 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48">
+    <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48 group">
 
       {/* Poster */}
       <div className="relative overflow-hidden aspect-[2/3]">

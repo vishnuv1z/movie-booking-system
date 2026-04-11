@@ -154,7 +154,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">M</span>
+                  <span className="text-white font-bold text-lg">CB</span>
                 </div>
                 <span className="text-lg font-bold text-gray-900 dark:text-white">CineBook</span>
               </div>

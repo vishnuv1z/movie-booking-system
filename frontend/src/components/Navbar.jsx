@@ -16,7 +16,7 @@ export default function Navbar() {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">M</span>
+                <span className="text-white font-bold text-lg">CB</span>
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">CineBook</span>
             </Link>
