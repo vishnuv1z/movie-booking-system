@@ -260,6 +260,7 @@ export default function Signup() {
                 )}
               </div>
 
+
               {/* Terms Checkbox */}
               <div className="flex items-start gap-3 pt-2">
                 <input

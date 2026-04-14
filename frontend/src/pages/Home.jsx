@@ -1,3 +1,5 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import BannerCarousel from '../components/BannerCarousel';
 import MovieSection from '../components/MovieSection';
@@ -106,6 +108,17 @@ const movies = [
 ];
 
 export default function Home() {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAuthLink = (path) => {
+    if (isAuthenticated) {
+      navigate(path);
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-dark-surface text-gray-900 dark:text-white transition-colors duration-300">
       <Navbar />
@@ -167,10 +180,23 @@ export default function Home() {
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li><a href="#" className="hover:text-primary transition-colors">Browse Movies</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">My Bookings</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Theaters</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">My Account</a></li>
+                <li><Link to="/" className="hover:text-primary transition-colors">Browse Movies</Link></li>
+                <li><button onClick={() => handleAuthLink('/bookings')} className="hover:text-primary transition-colors">My Bookings</button></li>
+                <li><button onClick={() => handleAuthLink('/profile')} className="hover:text-primary transition-colors">My Account</button></li>
+                <li>
+                  <button
+                    onClick={() => {
+                      if (isAuthenticated && (user?.role === 'theatreOwner' || user?.role === 'admin')) {
+                        navigate('/theatre-dashboard');
+                      } else {
+                        navigate('/theatre-login');
+                      }
+                    }}
+                    className="hover:text-primary transition-colors flex items-center gap-1"
+                  >
+                    List Your Theatre Shows
+                  </button>
+                </li>
               </ul>
             </div>
 
