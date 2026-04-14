@@ -2,14 +2,22 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MovieCard({ movie }) {
   const navigate = useNavigate();
-  const { title, language, duration, genre, rating, poster, year } = movie;
+  const { id, title, language, duration, genre, rating, poster, year } = movie;
 
-  const handleBookNow = () => {
+  const handleCardClick = () => {
+    navigate(`/movie/${id}`, { state: { movie } });
+  };
+
+  const handleBookNow = (e) => {
+    e.stopPropagation();
     navigate('/showtimes', { state: { movie } });
   };
 
   return (
-    <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48 group">
+    <div
+      onClick={handleCardClick}
+      className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48 group cursor-pointer"
+    >
 
       {/* Poster */}
       <div className="relative overflow-hidden aspect-[2/3]">
