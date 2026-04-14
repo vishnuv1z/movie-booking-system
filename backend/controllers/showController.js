@@ -48,8 +48,6 @@ exports.getSeatsByShow = async (req, res) => {
   }
 };
 
-const Show = require("../models/Show");
-
 exports.getShowsByMovie = async (req, res) => {
   try {
     const shows = await Show.find({ movie: req.params.movieId })
