@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { createShow, getSeatsByShow } = require("../controllers/showController");
+const { createShow, getSeatsByShow, getShowsByMovie } = require("../controllers/showController");
 
 router.post("/", createShow);
 router.get("/:showId/seats", getSeatsByShow);

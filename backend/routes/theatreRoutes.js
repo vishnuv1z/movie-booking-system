@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const auth = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 const { createTheatre } = require("../controllers/theatreController");
 
-router.post("/", auth, createTheatre);
+router.post("/", protect, createTheatre);
 
 module.exports = router;

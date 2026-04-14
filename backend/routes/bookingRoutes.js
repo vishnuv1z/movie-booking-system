@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const auth = require("../middleware/authMiddleware");
-const { bookSeats } = require("../controllers/bookingController");
+const { protect } = require("../middleware/authMiddleware");
+const { bookSeats, getUserBookings } = require("../controllers/bookingController");
 
-router.post("/", auth, bookSeats);
-router.get("/my", auth, getUserBookings);
+router.post("/", protect, bookSeats);
+router.get("/my", protect, getUserBookings);
 
 module.exports = router;
