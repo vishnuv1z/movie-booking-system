@@ -25,10 +25,10 @@ export default function MovieSection({ title, movies, showSeeAll = true }) {
   };
 
   return (
-    <div className="py-8 md:py-12">
+    <div className="py-4 md:py-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
           {title}
         </h2>
         {showSeeAll && (
@@ -42,12 +42,12 @@ export default function MovieSection({ title, movies, showSeeAll = true }) {
       </div>
 
       {/* Horizontal Scroll Container with Navigation */}
-      <div className="relative">
+      <div className="relative group/carousel">
         {/* Left Arrow */}
         {showLeftArrow && (
           <button
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700 text-gray-900 dark:text-white p-2 rounded-full transition-all shadow-md hover:shadow-lg"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700 text-gray-900 dark:text-white p-2 rounded-full transition-all shadow-md hover:shadow-lg opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100"
             aria-label="Scroll left"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@ export default function MovieSection({ title, movies, showSeeAll = true }) {
           className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide scroll-smooth"
         >
           {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+            <MovieCard key={movie._id || movie.id} movie={movie} />
           ))}
         </div>
 
@@ -71,7 +71,7 @@ export default function MovieSection({ title, movies, showSeeAll = true }) {
         {showRightArrow && (
           <button
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700 text-gray-900 dark:text-white p-2 rounded-full transition-all shadow-md hover:shadow-lg"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-700 text-gray-900 dark:text-white p-2 rounded-full transition-all shadow-md hover:shadow-lg opacity-100 sm:opacity-0 sm:group-hover/carousel:opacity-100"
             aria-label="Scroll right"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

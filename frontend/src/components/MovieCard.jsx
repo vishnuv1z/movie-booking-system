@@ -2,21 +2,28 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MovieCard({ movie }) {
   const navigate = useNavigate();
-  const { id, title, language, duration, genre, rating, poster, year } = movie;
+  const movieId = movie._id || movie.id;
+  const { title, language, genre, rating, poster } = movie;
+  // Duration from DB is in minutes (number), format it for display
+  const duration = typeof movie.duration === 'number'
+    ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m`
+    : movie.duration;
+  // Extract year from releaseDate or use the year field
+  const year = movie.year || (movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '');
 
   const handleCardClick = () => {
-    navigate(`/movie/${id}`, { state: { movie } });
+    navigate(`/movie/${movieId}`, { state: { movie: { ...movie, id: movieId, duration, year } } });
   };
 
   const handleBookNow = (e) => {
     e.stopPropagation();
-    navigate('/showtimes', { state: { movie } });
+    navigate('/showtimes', { state: { movie: { ...movie, id: movieId, duration, year } } });
   };
 
   return (
     <div
       onClick={handleCardClick}
-      className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:scale-105 transition-transform duration-300 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48 group cursor-pointer"
+      className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl sm:hover:shadow-2xl sm:hover:scale-105 transition-transform duration-300 flex flex-col flex-shrink-0 w-40 md:w-44 lg:w-48 group cursor-pointer"
     >
 
       {/* Poster */}
@@ -24,7 +31,7 @@ export default function MovieCard({ movie }) {
         <img
           src={poster}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 sm:group-hover:scale-110"
         />
 
         {/* Gradient overlay */}

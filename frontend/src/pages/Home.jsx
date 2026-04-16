@@ -1,115 +1,33 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import BannerCarousel from '../components/BannerCarousel';
 import MovieSection from '../components/MovieSection';
 
-const movies = [
-  {
-    id: 1,
-    title: "Dune: Part Two",
-    language: "English",
-    duration: "2h 46m",
-    genre: "Sci-Fi",
-    rating: "8.5",
-    year: "2024",
-    poster: "https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
-  },
-  {
-    id: 2,
-    title: "Oppenheimer",
-    language: "English",
-    duration: "3h 0m",
-    genre: "Drama",
-    rating: "8.9",
-    year: "2023",
-    poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
-  },
-  {
-    id: 3,
-    title: "Kalki 2898 AD",
-    language: "Telugu",
-    duration: "3h 1m",
-    genre: "Action",
-    rating: "7.2",
-    year: "2024",
-    poster: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Kalki_2898_AD.jpg/250px-Kalki_2898_AD.jpg",
-  },
-  {
-    id: 4,
-    title: "Deadpool & Wolverine",
-    language: "English",
-    duration: "2h 7m",
-    genre: "Action",
-    rating: "7.8",
-    year: "2024",
-    poster: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-  },
-  {
-    id: 5,
-    title: "Civil War",
-    language: "English",
-    duration: "1h 49m",
-    genre: "Thriller",
-    rating: "7.4",
-    year: "2024",
-    poster: "https://image.tmdb.org/t/p/w500/sh7Rg8Er3tFcN9BpKIPOMvALgZd.jpg",
-  },
-  {
-    id: 6,
-    title: "Alien: Romulus",
-    language: "English",
-    duration: "1h 59m",
-    genre: "Horror",
-    rating: "7.3",
-    year: "2024",
-    poster: "https://image.tmdb.org/t/p/w500/b33nnKl1GSFbao4l3fZDDqsMx0F.jpg",
-  },
-  {
-    id: 7,
-    title: "Inside Out 2",
-    language: "English",
-    duration: "1h 40m",
-    genre: "Animation",
-    rating: "7.8",
-    year: "2024",
-    poster: "https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
-  },
-  {
-    id: 8,
-    title: "Joker: Folie à Deux",
-    language: "English",
-    duration: "2h 18m",
-    genre: "Drama",
-    rating: "5.4",
-    year: "2024",
-    poster: "https://m.media-amazon.com/images/M/MV5BNTRlNmU1NzEtODNkNC00ZGM3LWFmNzQtMjBlMWRiYTcyMGRhXkEyXkFqcGc@._V1_.jpg",
-  },
-  {
-    id: 9,
-    title: "The Brutalist",
-    language: "English",
-    duration: "3h 35m",
-    genre: "Drama",
-    rating: "8.3",
-    year: "2024",
-    poster: "https://m.media-amazon.com/images/I/91MIC1j6kaL._AC_UF1000,1000_QL80_.jpg",
-  },
-  {
-    id: 10,
-    title: "Wicked",
-    language: "English",
-    duration: "2h 40m",
-    genre: "Musical",
-    rating: "8.0",
-    year: "2024",
-    poster: "https://m.media-amazon.com/images/M/MV5BOWMwYjYzYmMtMWQ2Ni00NWUwLTg2MzAtYzkzMDBiZDIwOTMwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-  },
-];
-
 export default function Home() {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/movies');
+        if (!res.ok) throw new Error('Failed to fetch movies');
+        const data = await res.json();
+        setMovies(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMovies();
+  }, []);
 
   const handleAuthLink = (path) => {
     if (isAuthenticated) {
@@ -118,6 +36,29 @@ export default function Home() {
       navigate('/login');
     }
   };
+
+  // Create varied sections from the fetched movies
+  const recommendedMovies = movies.slice(0, 8);
+  const popularMovies = [...movies].sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0)).slice(0, 8);
+  const comingSoon = [...movies].sort((a, b) => new Date(b.releaseDate || 0) - new Date(a.releaseDate || 0)).slice(0, 8);
+
+  // Loading skeleton for movie sections
+  const MovieSkeleton = () => (
+    <div className="py-8 md:py-12">
+      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
+      <div className="flex gap-4 overflow-hidden">
+        {Array.from({ length: 6 }, (_, i) => (
+          <div key={i} className="flex-shrink-0 w-40 md:w-44 lg:w-48">
+            <div className="aspect-[2/3] bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse" />
+            <div className="p-4 space-y-2">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark-surface text-gray-900 dark:text-white transition-colors duration-300">
@@ -131,40 +72,77 @@ export default function Home() {
           <BannerCarousel />
         </section>
 
-        {/* Recommended Movies Section */}
-        <section>
-          <MovieSection 
-            title="Recommended Movies" 
-            movies={movies.slice(0, 8)} 
-            showSeeAll={true}
-          />
-        </section>
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <div className="inline-flex items-center gap-2 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
 
-        {/* Popular This Week Section */}
-        <section className="mt-12 md:mt-16">
-          <MovieSection 
-            title="Popular This Week" 
-            movies={movies.slice(2, 10)} 
-            showSeeAll={true}
-          />
-        </section>
+        {/* Loading State */}
+        {loading && (
+          <>
+            <MovieSkeleton />
+            <MovieSkeleton />
+            <MovieSkeleton />
+          </>
+        )}
 
-        {/* Upcoming Section */}
-        <section className="mt-12 md:mt-16">
-          <MovieSection 
-            title="Coming Soon" 
-            movies={movies.slice(4, 10)} 
-            showSeeAll={true}
-          />
-        </section>
+        {/* Movie Sections */}
+        {!loading && !error && movies.length > 0 && (
+          <>
+            {/* Recommended Movies Section */}
+            <section>
+              <MovieSection 
+                title="Recommended Movies" 
+                movies={recommendedMovies} 
+                showSeeAll={true}
+              />
+            </section>
+
+            {/* Popular This Week Section */}
+            <section className="mt-6 md:mt-8">
+              <MovieSection 
+                title="Popular This Week" 
+                movies={popularMovies} 
+                showSeeAll={true}
+              />
+            </section>
+
+            {/* Upcoming Section */}
+            <section className="mt-6 md:mt-8">
+              <MovieSection 
+                title="Coming Soon" 
+                movies={comingSoon} 
+                showSeeAll={true}
+              />
+            </section>
+          </>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && movies.length === 0 && (
+          <div className="text-center py-20">
+            <svg className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-1">No movies available</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-500">Check back soon for new releases!</p>
+          </div>
+        )}
       </main>
 
       {/* Footer */}
       <footer className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 mt-16 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8 text-center sm:text-left">
             {/* Brand */}
-            <div>
+            <div className="flex flex-col items-center sm:items-start">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">CB</span>
@@ -179,11 +157,12 @@ export default function Home() {
             {/* Quick Links */}
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+              <ul className="flex flex-col items-center sm:items-start space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li><Link to="/" className="hover:text-primary transition-colors">Browse Movies</Link></li>
                 <li><button onClick={() => handleAuthLink('/bookings')} className="hover:text-primary transition-colors">My Bookings</button></li>
                 <li><button onClick={() => handleAuthLink('/profile')} className="hover:text-primary transition-colors">My Account</button></li>
-                <li>
+                {(!isAuthenticated || user?.role === 'theatreOwner' || user?.role === 'admin') && (
+                <li className="w-full text-center sm:text-left">
                   <button
                     onClick={() => {
                       if (isAuthenticated && (user?.role === 'theatreOwner' || user?.role === 'admin')) {
@@ -192,11 +171,12 @@ export default function Home() {
                         navigate('/theatre-login');
                       }
                     }}
-                    className="hover:text-primary transition-colors flex items-center gap-1"
+                    className="hover:text-primary transition-colors flex items-center justify-center sm:justify-start gap-1 w-full"
                   >
                     List Your Theatre Shows
                   </button>
                 </li>
+                )}
               </ul>
             </div>
 
@@ -224,11 +204,11 @@ export default function Home() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © 2026 CineBook. All rights reserved.
             </p>
-            <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex gap-6 sm:gap-4 text-sm text-gray-600 dark:text-gray-400">
               <a href="#" className="hover:text-primary transition-colors">Twitter</a>
               <a href="#" className="hover:text-primary transition-colors">Facebook</a>
               <a href="#" className="hover:text-primary transition-colors">Instagram</a>
