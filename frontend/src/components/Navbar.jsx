@@ -45,29 +45,29 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-dark-surface shadow-md transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-2 sm:gap-4">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">CB</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">CineBook</span>
+              <span className="hidden sm:block text-xl font-bold text-gray-900 dark:text-white">CineBook</span>
             </Link>
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-lg mx-8">
+          <div className="flex-1 max-w-lg mx-2 sm:mx-4 md:mx-8">
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search movies, actors..."
+                placeholder="Search movies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                className="w-full px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               />
               <svg
-                className="absolute right-3 top-2.5 w-5 h-5 text-gray-400"
+                className="absolute right-3 top-2 sm:top-2.5 w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -78,9 +78,9 @@ export default function Navbar() {
           </div>
 
           {/* Right Side Items */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             {/* Location Dropdown */}
-            <div className="relative group">
+            <div className="relative group hidden sm:block">
               <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -114,16 +114,16 @@ export default function Navbar() {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   {/* User Avatar */}
-                  <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-full flex items-center justify-center shadow-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-primary to-primary-dark rounded-full flex items-center justify-center shadow-sm">
                     <span className="text-white font-semibold text-xs">{getInitials(user.name)}</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block max-w-[100px] truncate">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:block max-w-[100px] truncate">
                     {user.name}
                   </span>
-                  <svg className={`w-4 h-4 text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`hidden sm:block w-4 h-4 text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -188,7 +188,7 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="px-5 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors shadow-sm hover:shadow-md"
+                className="px-3 sm:px-5 py-1.5 sm:py-2 bg-primary hover:bg-primary-dark text-white rounded-lg text-sm sm:text-base font-medium transition-colors shadow-sm hover:shadow-md whitespace-nowrap"
               >
                 Sign In
               </Link>
@@ -199,3 +199,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

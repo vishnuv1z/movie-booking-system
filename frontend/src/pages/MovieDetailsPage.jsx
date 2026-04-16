@@ -1,68 +1,8 @@
-import { useNavigate, useLocation, useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import CastCard from '../components/CastCard';
 import ReviewCard from '../components/ReviewCard';
-
-// ─── Enriched Movie Details (mock — would come from API) ─────
-const enrichedMovieDetails = {
-  1: {
-    certificate: "PG-13",
-    banner: "https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
-    description: "Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, he endeavors to prevent a terrible future only he can foresee.",
-  },
-  2: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/nb3xI8XI3w4pMVZ38VijbsyBqP4.jpg",
-    description: "The story of J. Robert Oppenheimer's role in the development of the atomic bomb during World War II, exploring the moral complexities and consequences of scientific discovery.",
-  },
-  3: {
-    certificate: "UA",
-    banner: "https://image.tmdb.org/t/p/original/kkrApCVJmNb3XlhYJPOosu3MNQ3.jpg",
-    description: "Set in a futuristic world, Kalki 2898 AD blends mythology and science fiction as a modern avatar rises to protect the world from darkness in a spectacular visual saga.",
-  },
-  4: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg",
-    description: "Deadpool and Wolverine join forces in an irreverent, action-packed adventure that breaks the fourth wall and the boundaries between Marvel universes.",
-  },
-  5: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/z21MiDzANhiCutVVIWVBfqJglHb.jpg",
-    description: "In the near future, a team of journalists and soldiers races against time to survive as the United States fractures in a brutal civil war across its own territory.",
-  },
-  6: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/9SSEUrSqhljBMzRe4aBTh17hYjd.jpg",
-    description: "A group of young space colonists encounter the most terrifying life form in the universe while scavenging a derelict space station in this chilling new chapter of the Alien saga.",
-  },
-  7: {
-    certificate: "PG",
-    banner: "https://image.tmdb.org/t/p/original/xg27NrXi7VXCGUr7MN75UqLl6Vg.jpg",
-    description: "Riley, now a teenager, faces a new set of complex emotions — Anxiety, Envy, Ennui, and Embarrassment — that reshape her sense of self during the turbulent journey of growing up.",
-  },
-  8: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/op3cvf9MlCfSTjCIgfSxILqSjBe.jpg",
-    description: "Arthur Fleck, now institutionalized at Arkham, finds unexpected love and is drawn into a musical madness that blurs the line between his dual identities.",
-  },
-  9: {
-    certificate: "R",
-    banner: "https://image.tmdb.org/t/p/original/aHa2OiJiJGMQMxThRr8M3w1CGHF.jpg",
-    description: "A visionary architect escapes post-war Europe and arrives in America to rebuild his life and creative legacy, only to face the cost of ambition and survival.",
-  },
-  10: {
-    certificate: "PG",
-    banner: "https://image.tmdb.org/t/p/original/uKb22E0nlzr914bA9KyA5CVCOlV.jpg",
-    description: "A young woman discovers she possesses extraordinary magical abilities and forms an unlikely bond before facing the forces that will make them the most famous figures in the Land of Oz.",
-  },
-};
-
-// ─── Default enriched data fallback ──────────────────────────
-const defaultEnriched = {
-  certificate: "PG-13",
-  banner: "https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg",
-  description: "An captivating cinematic experience that pushes the boundaries of storytelling and visual artistry. Discover the magic on the big screen.",
-};
 
 const castData = [
   { id: 1, name: "Timothée Chalamet", role: "Actor", image: "https://image.tmdb.org/t/p/w200/BE2iGtFMbyZ0FBnYkgVMni7nnOB.jpg" },
@@ -85,20 +25,57 @@ const reviewsData = [
 // ─── Component ───────────────────────────────────────────────
 export default function MovieDetailsPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { id } = useParams();
 
-  // Get movie from route state (passed by MovieCard click)
-  const movie = location.state?.movie;
+  const [movieData, setMovieData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Merge with enriched details
-  const enriched = enrichedMovieDetails[movie?.id || id] || defaultEnriched;
-  const movieData = movie
-    ? { ...movie, ...enriched }
-    : { id: Number(id), title: "Movie", language: "English", duration: "2h 0m", genre: "Drama", rating: "7.0", year: "2024", poster: enriched.banner, ...enriched };
+  // Scroll to top when navigating to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
-  // Fallback if no movie data at all
-  if (!movie && !enrichedMovieDetails[id]) {
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const res = await fetch(`http://localhost:5000/api/movies/${id}`);
+        if (!res.ok) throw new Error('Movie not found');
+        const data = await res.json();
+        setMovieData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMovie();
+  }, [id]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-dark-surface">
+        <Navbar />
+        <div className="relative h-[320px] sm:h-[400px] md:h-[480px] lg:h-[520px] bg-gray-200 dark:bg-gray-800 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded w-72 mb-4 animate-pulse" />
+          <div className="flex gap-2 mb-4">
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} className="h-7 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+            ))}
+          </div>
+          <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded mb-6 animate-pulse" />
+          <div className="h-12 w-40 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  // Error / not found state
+  if (error || !movieData) {
     return (
       <div className="min-h-screen bg-white dark:bg-dark-surface">
         <Navbar />
@@ -112,17 +89,33 @@ export default function MovieDetailsPage() {
     );
   }
 
+  // Use coverPhoto for the banner, fall back to poster
+  const bannerImage = movieData.coverPhoto || movieData.poster;
+
+  // Format duration from minutes to "Xh Ym"
+  const formatDuration = (minutes) => {
+    if (!minutes) return '';
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}h ${m}m`;
+  };
+
+  // Extract year from releaseDate
+  const movieYear = movieData.releaseDate
+    ? new Date(movieData.releaseDate).getFullYear()
+    : '';
+
   const handleBookNow = () => {
     navigate('/showtimes', {
       state: {
         movie: {
-          id: movieData.id,
+          id: movieData._id,
           title: movieData.title,
           language: movieData.language,
-          duration: movieData.duration,
+          duration: formatDuration(movieData.duration),
           genre: movieData.genre,
           rating: movieData.rating,
-          year: movieData.year,
+          year: movieYear,
           poster: movieData.poster,
         },
       },
@@ -138,7 +131,7 @@ export default function MovieDetailsPage() {
         {/* Banner Image */}
         <div className="relative h-[320px] sm:h-[400px] md:h-[480px] lg:h-[520px]">
           <img
-            src={movieData.banner}
+            src={bannerImage}
             alt={movieData.title}
             className="w-full h-full object-cover object-top"
           />
@@ -177,21 +170,31 @@ export default function MovieDetailsPage() {
                     </svg>
                     {movieData.rating}
                   </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
-                    {movieData.certificate}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
-                    {movieData.language}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
-                    {movieData.duration}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
-                    {movieData.genre}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
-                    {movieData.year}
-                  </span>
+                  {movieData.certificate && (
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
+                      {movieData.certificate}
+                    </span>
+                  )}
+                  {movieData.language && (
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
+                      {movieData.language}
+                    </span>
+                  )}
+                  {movieData.duration && (
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
+                      {formatDuration(movieData.duration)}
+                    </span>
+                  )}
+                  {movieData.genre && (
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
+                      {movieData.genre}
+                    </span>
+                  )}
+                  {movieYear && (
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700/60 text-gray-600 dark:text-gray-300">
+                      {movieYear}
+                    </span>
+                  )}
                 </div>
 
                 {/* Description */}
@@ -203,7 +206,7 @@ export default function MovieDetailsPage() {
                 <button
                   id="book-now-btn"
                   onClick={handleBookNow}
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-primary hover:bg-primary-dark text-white font-bold text-sm rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 active:scale-95"
+                  className="inline-flex justify-center items-center gap-2 w-full sm:w-auto px-8 py-3.5 sm:py-3 bg-primary hover:bg-primary-dark text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 active:scale-95"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
@@ -267,11 +270,11 @@ export default function MovieDetailsPage() {
       </main>
 
       {/* ─── Footer ───────────────────────────────────────────── */}
-      <footer className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <footer className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 transition-colors duration-300 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8 text-center sm:text-left">
             {/* Brand */}
-            <div>
+            <div className="flex flex-col items-center sm:items-start">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-dark rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">CB</span>
@@ -318,11 +321,11 @@ export default function MovieDetailsPage() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © 2026 CineBook. All rights reserved.
             </p>
-            <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex gap-6 sm:gap-4 text-sm text-gray-600 dark:text-gray-400">
               <a href="#" className="hover:text-primary transition-colors">Twitter</a>
               <a href="#" className="hover:text-primary transition-colors">Facebook</a>
               <a href="#" className="hover:text-primary transition-colors">Instagram</a>

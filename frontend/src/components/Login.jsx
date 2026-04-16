@@ -208,20 +208,6 @@ export default function Login() {
               <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600" />
             </div>
 
-            {/* Social Login Options */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <button className="py-2.5 px-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-primary dark:hover:border-primary text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-primary/5 dark:hover:bg-primary/10">
-                <svg className="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M15.545 6.558a9.42 9.42 0 01.139 1.626c0 2.449-.901 4.711-2.399 6.416m3.507-6.425a10.823 10.823 0 00-.891-2.704C13.474 1.917 10.866.858 7.877.858c-1.295 0-2.848.248-4.088.936-.577.333-1.15.748-1.697 1.184a10.02 10.02 0 002.905 16.93c1.25.512 2.8.863 4.422.863 3.12 0 5.821-1.365 7.831-3.718m-10.251-8.385h.008v.008h-.008V6.558z" />
-                </svg>
-              </button>
-              <button className="py-2.5 px-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-primary dark:hover:border-primary text-gray-700 dark:text-gray-300 font-medium transition-all hover:bg-primary/5 dark:hover:bg-primary/10">
-                <svg className="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10.5 1.5H3.75A2.25 2.25 0 001.5 3.75v12.5A2.25 2.25 0 003.75 18.5h12.5a2.25 2.25 0 002.25-2.25V9.5" stroke="currentColor" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-                  <path d="M15 1.5v6M12 4.5h6" stroke="currentColor" strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
-                </svg>
-              </button>
-            </div>
 
             {/* Sign Up Link */}
             <div className="text-center">

@@ -117,6 +117,7 @@ export default function TheatreOwnerDashboard() {
   // Load tab-specific data when tab or selected theatre changes
   useEffect(() => {
     if (selectedTheatre) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (activeTab === 'screens') fetchScreens(selectedTheatre);
       if (activeTab === 'shows') {
         fetchScreens(selectedTheatre);

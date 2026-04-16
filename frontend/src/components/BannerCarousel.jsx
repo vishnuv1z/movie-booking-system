@@ -46,7 +46,7 @@ export default function BannerCarousel() {
   };
 
   return (
-    <div className="relative w-full h-80 md:h-96 lg:h-[28rem] bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden group">
+    <div className="relative w-full aspect-[4/5] sm:aspect-video lg:h-[28rem] bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden group">
       {/* Carousel Container */}
       <div className="relative w-full h-full overflow-hidden">
         <div
@@ -67,9 +67,9 @@ export default function BannerCarousel() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               
               {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <h2 className="text-3xl md:text-4xl font-bold mb-2">{banner.title}</h2>
-                <p className="text-lg text-gray-200">{banner.subtitle}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 text-white text-center sm:text-left">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">{banner.title}</h2>
+                <p className="text-sm sm:text-lg text-gray-200">{banner.subtitle}</p>
               </div>
             </div>
           ))}
