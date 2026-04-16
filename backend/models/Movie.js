@@ -30,6 +30,14 @@ const movieSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    coverPhoto: {
+      type: String,
+      trim: true,
+    },
+    certificate: {
+      type: String,
+      trim: true,
+    },
     releaseDate: Date,
   },
   {
