@@ -14,6 +14,7 @@ export default function ScreenForm({ screen, theatreId, onSubmit, onClose }) {
 
   useEffect(() => {
     if (screen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         name: screen.name || '',
         screenType: screen.screenType || 'Standard',

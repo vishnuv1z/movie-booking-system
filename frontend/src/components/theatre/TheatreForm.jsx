@@ -21,6 +21,7 @@ export default function TheatreForm({ theatre, onSubmit, onClose }) {
 
   useEffect(() => {
     if (theatre) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         name: theatre.name || '',
         location: theatre.location || '',

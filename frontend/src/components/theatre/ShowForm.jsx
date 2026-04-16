@@ -15,6 +15,7 @@ export default function ShowForm({ show, theatreId, screens, movies, onSubmit, o
 
   useEffect(() => {
     if (show) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         movie: show.movie?._id || show.movie || '',
         screen: show.screen?._id || show.screen || '',
@@ -66,6 +67,7 @@ export default function ShowForm({ show, theatreId, screens, movies, onSubmit, o
         const endH = Math.floor(totalMin / 60) % 24;
         const endM = totalMin % 60;
         const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setForm((prev) => ({ ...prev, endTime }));
       }
     }
